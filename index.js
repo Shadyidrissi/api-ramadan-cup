@@ -168,6 +168,20 @@ app.get('/show_all_matches', async (req, res) => {
     const data = await Match.find();
     res.status(200).json(data);
 });
+app.delete("/delete_match/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedMatch = await Match.findByIdAndDelete(id);
+        
+        if (!deletedMatch) {
+            return res.status(404).json({ message: 'النادي غير موجود' });
+        }
+
+        res.status(200).json({ message: 'تم حذف النادي بنجاح', club: deletedMatch });
+    } catch (error) {
+        res.status(500).json({ message: 'خطأ أثناء حذف النادي', error });
+    }
+});
 
 // تشغيل الخادم
 const startServer = async () => {
